@@ -15,6 +15,7 @@
 #include <list>
 #include <mutex>  // NOLINT
 #include <vector>
+#include <unordered_map>
 
 #include "buffer/replacer.h"
 #include "common/config.h"
@@ -28,7 +29,7 @@ class LRUReplacer : public Replacer {
  public:
   /**
    * Create a new LRUReplacer.
-   * @param num_pages the maximum number of pages the LRUReplacer will be required to store
+   * @param num_pages the maximum number of pages the ClockReplacer will be required to store
    */
   explicit LRUReplacer(size_t num_pages);
 
@@ -46,7 +47,9 @@ class LRUReplacer : public Replacer {
   size_t Size() override;
 
  private:
-  // TODO(student): implement me!
+  std::unordered_map<frame_id_t, std::list<frame_id_t>::iterator> frame_table_;
+  std::list<frame_id_t> lru_list_;
+  std::mutex mutex_;
 };
 
 }  // namespace bustub
